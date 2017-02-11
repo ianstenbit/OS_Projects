@@ -44,7 +44,22 @@ void printHistory(struct History* history){
 }
 
 void addToHistory(char** args, struct History* history){
-    if(history->num_commands >= 10) free(history->commands[(history->num_commands) % HISTORY_LENGTH]);
+    if(history->num_commands >= 10) {
+
+      int found = 0;
+
+      char** command = history->commands[(history->num_commands) % HISTORY_LENGTH];
+      for(int i2 = h->num_commands - 1, j2 = 0; i2 >= 0 && j2 < 10; j2++,i2--){
+        if(command == h->commands[i2%10])
+           found = 1;
+      }
+
+      if(found == 0) free(command);
+
+    }
+
+
+
     history->commands[(history->num_commands) % HISTORY_LENGTH] = args;
     history->num_commands++;
 }
