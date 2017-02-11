@@ -22,6 +22,42 @@ void tokenize(char** result, char* input){
 
 }
 
+void run_command(char** args){
+
+  int i = 0;
+  while(args[i][0]) i++;
+
+  int should_wait = 0;
+
+  char** args_cat = malloc(i * sizeof(char*));
+  for(int j = 0; j < i; j++){
+     args_cat[j] = args[j];
+     printf("Token: %s\n", args[j]);
+  }
+
+  if(args_cat[i-1][0] == '&' && args_cat[i-1][1] == 0){
+    should_wait = 1;
+    args_cat[i-1] = 0;
+  } else {
+    args_cat[i] = 0;
+  }
+
+  pid_t pid = fork();
+
+  switch(pid){
+    case -1:
+        printf("Error forking\n");
+        break;
+    case 0:
+        execvp(args_cat[0], args_cat);
+        exit(0);
+    default:
+        if(should_wait) waitpid(pid, 0, 0);
+  }
+
+
+}
+
 
 int main(){
 
@@ -43,14 +79,7 @@ int main(){
         tokenize(args, tmp);
         fflush(stdout);
 
-        int tok = 0;
-        while(*(args[tok])){
-          printf("Token: %s\n", args[tok++]);
-          fflush(stdout);
-        }
-        /*
-        Fork, execvp, and wait() if needed
-        */
+        run_command(args);
 
     }
 
