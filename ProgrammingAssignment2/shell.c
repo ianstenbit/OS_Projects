@@ -50,12 +50,22 @@ void addToHistory(char** args, struct History* history){
 
 char** getHistoryCommand(struct History* h, char* arg){
 
-  if(arg[1] == '!') return h->commands[(h->num_commands-1)%HISTORY_LENGTH];
+  if(arg[1] == '!'){
+    if(h->num_commands > 0)
+      return h->commands[(h->num_commands-1)%HISTORY_LENGTH];
+    else {
+      printf("No commands in history\n");
+      fflush(stdout);
+      return 0;
+    }
+  }
 
   int num = atoi(arg + 1);
   if(num > 0 && num <= h->num_commands)
     return h->commands[(num-1)%HISTORY_LENGTH];
 
+  printf("No such command in history\n");
+  fflush(stdout);
   return 0;
 }
 
@@ -75,19 +85,18 @@ int run_command(char** args, struct History* history){
   args_cat[i] = 0;
 
   if(i >= 1){
-      if(strlen(args_cat[0]) == 7 && strcmp(args_cat[0], "history") == 0) printHistory(history);
-
-      if(strlen(args_cat[0]) == 4 && strcmp(args_cat[0], "exit") == 0) {
-        return 0;
-      }
 
       if(strlen(args_cat[0]) == 2 || strlen(args_cat[0]) == 3){
         if(args_cat[0][0] == '!'){
           args_cat = getHistoryCommand(history, args_cat[0]);
+          if(args_cat == 0) return 1;
           int loc = 0;
           while(args_cat[loc]) printf("%s ", args_cat[loc++]);
           printf("\n");
           fflush(stdout);
+
+          i = 0;
+          while(args_cat[i]) i++;
         }
       }
 
@@ -96,6 +105,10 @@ int run_command(char** args, struct History* history){
         free(args_cat[i-1]);
         args_cat[i-1] = 0;
       }
+
+      if(strlen(args_cat[0]) == 7 && strcmp(args_cat[0], "history") == 0) printHistory(history);
+
+      if(strlen(args_cat[0]) == 4 && strcmp(args_cat[0], "exit") == 0) return 0;
 
   }
 
