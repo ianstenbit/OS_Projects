@@ -44,6 +44,7 @@ void printHistory(struct History* history){
 }
 
 void addToHistory(char** args, struct History* history){
+    if(history->num_commands >= 10) free(history->commands[(history->num_commands) % HISTORY_LENGTH]);
     history->commands[(history->num_commands) % HISTORY_LENGTH] = args;
     history->num_commands++;
 }
@@ -61,7 +62,7 @@ char** getHistoryCommand(struct History* h, char* arg){
   }
 
   int num = atoi(arg + 1);
-  if(num > 0 && num <= h->num_commands)
+  if(num > 0 && num >= h->num_commands - 10 && num <= h->num_commands)
     return h->commands[(num-1)%HISTORY_LENGTH];
 
   printf("No such command in history\n");
@@ -86,7 +87,7 @@ int run_command(char** args, struct History* history){
 
   if(i >= 1){
 
-      if(strlen(args_cat[0]) == 2 || strlen(args_cat[0]) == 3){
+      if(strlen(args_cat[0]) >= 2){
         if(args_cat[0][0] == '!'){
           args_cat = getHistoryCommand(history, args_cat[0]);
           if(args_cat == 0) return 1;
@@ -136,6 +137,24 @@ int run_command(char** args, struct History* history){
 
 }
 
+void cleanup(struct History* h){
+
+  for(int i = h->num_commands - 1, j = 0; i >= 0 && j < 10; j++,i--){
+     int loc = 0;
+     for(int i2 = h->num_commands - 1, j2 = 0; i2 >= 0 && j2 < 10; j2++,i2--){
+       if(h->commands[i%10] == h->commands[i2%10])
+          h->commands[i2%10] = 0;
+     }
+
+     if(h->commands[i%10] == 0) continue;
+     while(h->commands[i%10][loc]) free(h->commands[i%10][loc++]);
+     free(h->commands[i%10]);
+  }
+
+  free(h->commands);
+
+}
+
 
 int main(){
 
@@ -167,6 +186,8 @@ int main(){
     for(int i = 0; i < MAX_LINE/2+2; i++){
       free(args[i]);
     }
+
+    cleanup(h);
 
     return 0;
 
