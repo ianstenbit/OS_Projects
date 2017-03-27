@@ -222,7 +222,7 @@ int main(int argc, char* argv[]){
     available[i] = atoi(argv[i+1]);
 
     for(int j = 0; j < NUM_CUSTOMERS; j++){
-      maximum[j][i] = (int)((rand()/(1.0 * RAND_MAX)) * available[i]);
+      maximum[j][i] = (int)((rand()/(2.0 * RAND_MAX) + 0.5) * available[i] / 2);
       allocation[j][i] = 0;
       need[j][i] = maximum[j][i];
     }
