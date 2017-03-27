@@ -4,8 +4,8 @@
 #include <pthread.h>
 #include <unistd.h>
 
-#define NUM_CUSTOMERS 5
-#define NUM_RESOURCES 3
+#define NUM_CUSTOMERS 12
+#define NUM_RESOURCES 5
 
 int available[NUM_RESOURCES];
 int maximum[NUM_CUSTOMERS][NUM_RESOURCES];
