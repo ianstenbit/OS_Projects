@@ -105,6 +105,8 @@ int request_resources(int cid, int* request){
 
     }
 
+    if(!found) return -1;
+
   }
 
   printf("Safe ordering: [");
@@ -222,7 +224,7 @@ int main(int argc, char* argv[]){
     available[i] = atoi(argv[i+1]);
 
     for(int j = 0; j < NUM_CUSTOMERS; j++){
-      maximum[j][i] = (int)((rand()/(1.0 * RAND_MAX)) * available[i]) / 2;
+      maximum[j][i] = (int)(((rand()/(1.0 * RAND_MAX)) * available[i]) / (NUM_CUSTOMERS / 2.0));
       allocation[j][i] = 0;
       need[j][i] = maximum[j][i];
     }
