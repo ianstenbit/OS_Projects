@@ -123,7 +123,7 @@ void make_request(int cid){
   int request[NUM_RESOURCES];
 
   for(int i = 0; i < NUM_RESOURCES; i++)
-    request[i] = (int)((rand()/(1.0*RAND_MAX)) * need[cid][i]);
+    request[i] = (int)((rand()/(1.0*RAND_MAX)) * need[cid][i] + 0.5);
 
 
 
