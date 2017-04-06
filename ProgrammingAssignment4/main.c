@@ -1,0 +1,130 @@
+#define PAGE_REF_STRING_LENGTH 500
+
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+
+int contains(int* arr, int num, int len){
+
+  for(int i = 0; i < len; i++)
+    if(arr[i] == num)
+      return 1;
+
+  return 0;
+
+}
+
+int arg_max(int* arr, int len){
+
+  int max = -1;
+  int argmax = 0;
+
+  for(int i = 0; i < len; i++){
+    if(arr[i] >= 0 && arr[i] > max){
+      max = arr[i];
+      argmax = i;
+    }
+  }
+
+  return argmax;
+
+}
+
+int arg_min(int* arr, int len){
+
+  int min = PAGE_REF_STRING_LENGTH + 1;
+  int argmin = 0;
+
+  for(int i = 0; i < len; i++){
+    if(arr[i] >= 0 && arr[i] < min){
+      min = arr[i];
+      argmin = i;
+    }
+  }
+
+  return argmin;
+
+}
+
+void algorithms(int* page_ref, int max_frames){
+
+  int* FIFO_memory = malloc(max_frames * sizeof(int));
+  int* LRU_memory = malloc(max_frames * sizeof(int));
+  int* OPT_memory = malloc(max_frames * sizeof(int));
+
+  int FIFO_faults = 0, LRU_faults = 0, OPT_faults = 0;
+
+  int* entered = malloc(max_frames * sizeof(int));
+  memset(entered, 0, max_frames * sizeof(int));
+
+  int* used = malloc(max_frames * sizeof(int));
+  memset(used, 0, max_frames * sizeof(int));
+
+
+  for(int i = 0; i < PAGE_REF_STRING_LENGTH; i++){
+
+    //FIFO
+    if(!contains(FIFO_memory, page_ref[i], max_frames)){
+
+      FIFO_faults++;
+      int repl_index = arg_min(entered, max_frames);
+      FIFO_memory[repl_index] = page_ref[i];
+      entered[repl_index] = i + 1;
+
+    }
+
+    //LRU
+    if(!contains(LRU_memory, page_ref[i], max_frames)){
+
+      LRU_faults++;
+      int repl_index = arg_min(used, max_frames);
+      LRU_memory[repl_index] = page_ref[i];
+      used[repl_index] = 0;
+
+    }
+
+    for(int j = 0; j < max_frames; j++) if(LRU_memory[j] == page_ref[i]) used[j] = i;
+
+
+
+  }
+
+  printf("\tFIFO Faults: %i\n", FIFO_faults);
+  printf("\tLRU Faults: %i\n", LRU_faults);
+
+
+  free(entered);
+  free(used);
+
+}
+
+
+int main(int argc, char* argv[]){
+
+    int page_ref_string[PAGE_REF_STRING_LENGTH];
+
+
+    printf("String: ");
+    for(int i = 0; i < PAGE_REF_STRING_LENGTH; i++){
+      page_ref_string[i] = (int) ((rand()/(1.0*RAND_MAX)) * 10);
+      printf("%i", page_ref_string[i]);
+    }
+    printf("\n");
+
+    int population_of_page_frames = 0;
+
+    for(int max_pages = 1; max_pages <= 7; max_pages++){
+
+        printf("Number of Page Frames: %i\n", max_pages);
+
+        //printf("\tFIFO: %i faults\n", FIFO(page_ref_string, max_pages, memory));
+        //printf("\tLRU: %i faults\n", LRU(page_ref_string, max_pages, memory));
+        //OPT(page_ref_string, max_pages, memory)
+
+        algorithms(page_ref_string, max_pages);
+
+    }
+
+}
