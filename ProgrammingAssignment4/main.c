@@ -1,4 +1,4 @@
-#define PAGE_REF_STRING_LENGTH 500
+#define PAGE_REF_STRING_LENGTH 20
 
 
 #include <stdlib.h>
@@ -48,11 +48,36 @@ int arg_min(int* arr, int len){
 
 }
 
+int OPT_helper(int* memory, int* page_ref, int loc, int max_frames){
+
+  int* location = malloc(max_frames * sizeof(int));
+  for(int i = 0; i < max_frames; i++){
+    location[i] = PAGE_REF_STRING_LENGTH + 1;
+  }
+
+  for(int i = loc + 1; i < PAGE_REF_STRING_LENGTH; i++){
+
+    for(int j = 0; j < max_frames; j++)
+      if(page_ref[i] == memory[j] && location[j] == PAGE_REF_STRING_LENGTH + 1)
+        location[j] = i;
+
+  }
+
+  int val = arg_max(location, max_frames);
+  free(location);
+
+  return val;
+
+}
+
 void algorithms(int* page_ref, int max_frames){
 
   int* FIFO_memory = malloc(max_frames * sizeof(int));
+  memset(FIFO_memory, 1, max_frames * sizeof(int));
   int* LRU_memory = malloc(max_frames * sizeof(int));
+  memset(LRU_memory, 1, max_frames * sizeof(int));
   int* OPT_memory = malloc(max_frames * sizeof(int));
+  memset(OPT_memory, 1, max_frames * sizeof(int));
 
   int FIFO_faults = 0, LRU_faults = 0, OPT_faults = 0;
 
@@ -87,12 +112,21 @@ void algorithms(int* page_ref, int max_frames){
 
     for(int j = 0; j < max_frames; j++) if(LRU_memory[j] == page_ref[i]) used[j] = i;
 
+    //OPT
+    if(!contains(OPT_memory, page_ref[i], max_frames)){
+
+      OPT_faults++;
+      int repl_index = OPT_helper(OPT_memory, page_ref, i, max_frames);
+      OPT_memory[repl_index] = page_ref[i];
+
+    }
 
 
   }
 
   printf("\tFIFO Faults: %i\n", FIFO_faults);
   printf("\tLRU Faults: %i\n", LRU_faults);
+  printf("\tOPT Faults: %i\n", OPT_faults);
 
 
   free(entered);
