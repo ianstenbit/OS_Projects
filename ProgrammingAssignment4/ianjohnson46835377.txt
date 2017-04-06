@@ -1,0 +1,5 @@
+Name: Ian Johnson
+ID: 46835377
+Compile: gcc main.c
+To include more information in the output, set the DEBUG macro to 1
+To change the number of items in the test string, change PAGE_REF_STRING_LENGTH

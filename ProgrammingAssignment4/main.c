@@ -1,4 +1,4 @@
-#define PAGE_REF_STRING_LENGTH 20
+#define PAGE_REF_STRING_LENGTH 500
 #define DEBUG 0 //Set to 1 for more informations
 
 #include <stdlib.h>
