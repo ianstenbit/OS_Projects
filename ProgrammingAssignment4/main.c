@@ -94,7 +94,7 @@ void algorithms(int* page_ref, int max_frames){
 
       printf("Page fault in FIFO on page number %i at index %i\n", page_ref[i], i);
       printf("\nMemory before swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", FIFO_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", FIFO_memory[j]);
       printf("\b]\n");
 
       FIFO_faults++;
@@ -103,7 +103,7 @@ void algorithms(int* page_ref, int max_frames){
       entered[repl_index] = i + 1;
 
       printf("\nMemory after swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", FIFO_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", FIFO_memory[j]);
       printf("\b]\n");
 
     }
@@ -113,7 +113,7 @@ void algorithms(int* page_ref, int max_frames){
 
       printf("Page fault in LRU on page number %i at index %i\n", page_ref[i], i);
       printf("\nMemory before swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", LRU_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", LRU_memory[j]);
       printf("\b]\n");
 
       LRU_faults++;
@@ -122,7 +122,7 @@ void algorithms(int* page_ref, int max_frames){
       used[repl_index] = 0;
 
       printf("\nMemory after swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", LRU_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", LRU_memory[j]);
       printf("\b]\n");
 
     }
@@ -134,7 +134,7 @@ void algorithms(int* page_ref, int max_frames){
 
       printf("Page fault in OPT on page number %i at index %i\n", page_ref[i], i);
       printf("\nMemory before swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", OPT_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", OPT_memory[j]);
       printf("\b]\n");
 
       OPT_faults++;
@@ -142,7 +142,7 @@ void algorithms(int* page_ref, int max_frames){
       OPT_memory[repl_index] = page_ref[i];
 
       printf("\nMemory after swap: [");
-      for(int j = 0; j < i && j < max_frames) printf("%i,", OPT_memory[j]);
+      for(int j = 0; j < i && j < max_frames; j++) printf("%i,", OPT_memory[j]);
       printf("\b]\n");
 
     }
