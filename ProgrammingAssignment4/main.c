@@ -1,6 +1,5 @@
 #define PAGE_REF_STRING_LENGTH 20
 
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -93,20 +92,38 @@ void algorithms(int* page_ref, int max_frames){
     //FIFO
     if(!contains(FIFO_memory, page_ref[i], max_frames)){
 
+      printf("Page fault in FIFO on page number %i at index %i\n", page_ref[i], i);
+      printf("\nMemory before swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", FIFO_memory[j]);
+      printf("\b]\n");
+
       FIFO_faults++;
       int repl_index = arg_min(entered, max_frames);
       FIFO_memory[repl_index] = page_ref[i];
       entered[repl_index] = i + 1;
+
+      printf("\nMemory after swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", FIFO_memory[j]);
+      printf("\b]\n");
 
     }
 
     //LRU
     if(!contains(LRU_memory, page_ref[i], max_frames)){
 
+      printf("Page fault in LRU on page number %i at index %i\n", page_ref[i], i);
+      printf("\nMemory before swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", LRU_memory[j]);
+      printf("\b]\n");
+
       LRU_faults++;
       int repl_index = arg_min(used, max_frames);
       LRU_memory[repl_index] = page_ref[i];
       used[repl_index] = 0;
+
+      printf("\nMemory after swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", LRU_memory[j]);
+      printf("\b]\n");
 
     }
 
@@ -115,9 +132,18 @@ void algorithms(int* page_ref, int max_frames){
     //OPT
     if(!contains(OPT_memory, page_ref[i], max_frames)){
 
+      printf("Page fault in OPT on page number %i at index %i\n", page_ref[i], i);
+      printf("\nMemory before swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", OPT_memory[j]);
+      printf("\b]\n");
+
       OPT_faults++;
       int repl_index = OPT_helper(OPT_memory, page_ref, i, max_frames);
       OPT_memory[repl_index] = page_ref[i];
+
+      printf("\nMemory after swap: [");
+      for(int j = 0; j < i && j < max_frames) printf("%i,", OPT_memory[j]);
+      printf("\b]\n");
 
     }
 
